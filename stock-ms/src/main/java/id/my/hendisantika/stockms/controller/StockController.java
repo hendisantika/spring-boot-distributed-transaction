@@ -1,17 +1,19 @@
 package id.my.hendisantika.stockms.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import id.my.hendisantika.stockms.dto.CustomerOrder;
 import id.my.hendisantika.stockms.dto.DeliveryEvent;
 import id.my.hendisantika.stockms.dto.PaymentEvent;
+import id.my.hendisantika.stockms.dto.Stock;
 import id.my.hendisantika.stockms.entity.WareHouse;
 import id.my.hendisantika.stockms.repository.StockRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -69,6 +71,23 @@ public class StockController {
             pe.setOrder(order);
             pe.setType("PAYMENT_REVERSED");
             kafkaPaymentTemplate.send("reversed-payments", pe);
+        }
+    }
+
+    @PostMapping("/addItems")
+    public void addItems(@RequestBody Stock stock) {
+        Iterable<WareHouse> items = stockRepository.findByItem(stock.getItem());
+
+        if (items.iterator().hasNext()) {
+            items.forEach(i -> {
+                i.setQuantity(stock.getQuantity() + i.getQuantity());
+                stockRepository.save(i);
+            });
+        } else {
+            WareHouse i = new WareHouse();
+            i.setItem(stock.getItem());
+            i.setQuantity(stock.getQuantity());
+            stockRepository.save(i);
         }
     }
 }
