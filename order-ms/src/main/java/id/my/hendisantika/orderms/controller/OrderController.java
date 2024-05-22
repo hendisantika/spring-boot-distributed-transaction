@@ -5,6 +5,7 @@ import id.my.hendisantika.orderms.dto.OrderEvent;
 import id.my.hendisantika.orderms.entity.Order;
 import id.my.hendisantika.orderms.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Time: 05:45
  * To change this template use File | Settings | File Templates.
  */
+@Slf4j
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -47,6 +49,7 @@ public class OrderController {
             event.setOrder(customerOrder);
             event.setType("ORDER_CREATED");
             kafkaTemplate.send("new-orders", event);
+            log.info("new-orders ORDER_CREATED {}", event);
         } catch (Exception e) {
             order.setStatus("FAILED");
             orderRepository.save(order);

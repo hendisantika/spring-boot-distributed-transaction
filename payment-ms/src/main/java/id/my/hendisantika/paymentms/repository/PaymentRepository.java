@@ -1,4 +1,4 @@
-package id.my.hendisantika.paymentms.entity.repository;
+package id.my.hendisantika.paymentms.repository;
 
 import id.my.hendisantika.paymentms.entity.Payment;
 import org.springframework.data.repository.CrudRepository;

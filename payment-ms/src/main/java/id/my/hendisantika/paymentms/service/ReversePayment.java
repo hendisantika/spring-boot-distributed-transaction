@@ -5,7 +5,7 @@ import id.my.hendisantika.paymentms.dto.CustomerOrder;
 import id.my.hendisantika.paymentms.dto.OrderEvent;
 import id.my.hendisantika.paymentms.dto.PaymentEvent;
 import id.my.hendisantika.paymentms.entity.Payment;
-import id.my.hendisantika.paymentms.entity.repository.PaymentRepository;
+import id.my.hendisantika.paymentms.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;

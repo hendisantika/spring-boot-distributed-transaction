@@ -1,13 +1,12 @@
 package id.my.hendisantika.paymentms.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import id.my.hendisantika.paymentms.dto.CustomerOrder;
 import id.my.hendisantika.paymentms.dto.OrderEvent;
 import id.my.hendisantika.paymentms.dto.PaymentEvent;
 import id.my.hendisantika.paymentms.entity.Payment;
-import id.my.hendisantika.paymentms.entity.repository.PaymentRepository;
+import id.my.hendisantika.paymentms.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -49,20 +48,24 @@ public class PaymentController {
             payment.setOrderId(order.getOrderId());
             payment.setStatus("SUCCESS");
             paymentRepository.save(payment);
+            log.info("PAYMENT_SUCCESS {}", payment);
 
             PaymentEvent paymentEvent = new PaymentEvent();
             paymentEvent.setOrder(orderEvent.getOrder());
             paymentEvent.setType("PAYMENT_CREATED");
             kafkaTemplate.send("new-payments", paymentEvent);
+            log.info("PAYMENT_CREATED {}", paymentEvent);
         } catch (Exception e) {
             payment.setOrderId(order.getOrderId());
             payment.setStatus("FAILED");
             paymentRepository.save(payment);
+            log.info("PAYMENT_FAILED {}", payment);
 
             OrderEvent oe = new OrderEvent();
             oe.setOrder(order);
             oe.setType("ORDER_REVERSED");
             kafkaOrderTemplate.send("reversed-orders", orderEvent);
+            log.info("ORDER_REVERSED {}", oe);
         }
     }
 

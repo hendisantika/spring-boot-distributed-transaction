@@ -2,6 +2,7 @@ package id.my.hendisantika.orderms.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * Created by IntelliJ IDEA.
@@ -15,6 +16,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@ToString
 public class OrderEvent {
 
     private String type;
