@@ -1,34 +1,78 @@
+# Dependabot configuration
+# Docs: https://docs.github.com/en/code-security/dependabot/working-with-dependabot/dependabot-options-reference
 version: 2
 updates:
+  # ---------------------------------------------------------------------------
+  # Maven - all microservices share one config, so a single PR bumps the same
+  # dependency in every service at once (no more 4 identical PRs).
+  # ---------------------------------------------------------------------------
   - package-ecosystem: maven
-    directory: "/delivery-ms"
+    directories:
+      - "/delivery-ms"
+      - "/order-ms"
+      - "/payment-ms"
+      - "/stock-ms"
     schedule:
       interval: daily
-      time: '05:00'
+      time: "05:00"
       timezone: Asia/Jakarta
     open-pull-requests-limit: 10
-  - package-ecosystem: maven
-    directory: "/order-ms"
-    schedule:
-      interval: daily
-      time: '05:00'
-      timezone: Asia/Jakarta
-    open-pull-requests-limit: 10
-  - package-ecosystem: maven
-    directory: "/payment-ms"
-    schedule:
-      interval: daily
-      time: '05:00'
-      timezone: Asia/Jakarta
-    open-pull-requests-limit: 10
-  - package-ecosystem: maven
-    directory: "/stock-ms"
-    schedule:
-      interval: daily
-      time: '05:00'
-      timezone: Asia/Jakarta
-    open-pull-requests-limit: 10
-  - package-ecosystem: "github-actions"
+    target-branch: main
+    labels:
+      - dependencies
+      - java
+    assignees:
+      - hendisantika
+    commit-message:
+      prefix: "chore(deps)"
+      prefix-development: "chore(deps-dev)"
+      include: scope
+    rebase-strategy: auto
+    groups:
+      # Spring Boot parent & Spring ecosystem (minor/patch)
+      spring-boot:
+        patterns:
+          - "org.springframework.boot*"
+          - "org.springframework*"
+        update-types:
+          - minor
+          - patch
+      # Everything else (minor/patch) bundled together
+      maven-dependencies:
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "org.springframework.boot*"
+          - "org.springframework*"
+        update-types:
+          - minor
+          - patch
+    ignore:
+      # Major Spring Boot upgrades need a manual migration (e.g. Boot 3 -> 4)
+      - dependency-name: "org.springframework.boot:spring-boot-starter-parent"
+        update-types:
+          - version-update:semver-major
+
+  # ---------------------------------------------------------------------------
+  # GitHub Actions used by the CI workflows
+  # ---------------------------------------------------------------------------
+  - package-ecosystem: github-actions
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: weekly
+      day: monday
+      time: "05:00"
+      timezone: Asia/Jakarta
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - github_actions
+    assignees:
+      - hendisantika
+    commit-message:
+      prefix: "ci(deps)"
+      include: scope
+    groups:
+      github-actions:
+        patterns:
+          - "*"
