@@ -1,8 +1,5 @@
 package id.my.hendisantika.deliveryms.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import id.my.hendisantika.deliveryms.dto.CustomerOrder;
 import id.my.hendisantika.deliveryms.dto.DeliveryEvent;
 import id.my.hendisantika.deliveryms.entity.Delivery;
@@ -12,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Controller;
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * Created by IntelliJ IDEA.
@@ -33,7 +31,7 @@ public class DeliveryController {
     private final KafkaTemplate<String, DeliveryEvent> kafkaTemplate;
 
     @KafkaListener(topics = "new-stock", groupId = "stock-group")
-    public void deliverOrder(String event) throws JsonProcessingException {
+    public void deliverOrder(String event) {
         log.info("Inside ship order for order {}", event);
 
         Delivery shipment = new Delivery();

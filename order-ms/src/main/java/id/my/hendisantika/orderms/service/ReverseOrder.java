@@ -1,6 +1,5 @@
 package id.my.hendisantika.orderms.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import id.my.hendisantika.orderms.dto.OrderEvent;
 import id.my.hendisantika.orderms.entity.Order;
 import id.my.hendisantika.orderms.repository.OrderRepository;
@@ -8,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
+import tools.jackson.databind.ObjectMapper;
 
 import java.util.Optional;
 

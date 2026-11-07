@@ -1,7 +1,5 @@
 package id.my.hendisantika.paymentms.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import id.my.hendisantika.paymentms.dto.CustomerOrder;
 import id.my.hendisantika.paymentms.dto.OrderEvent;
 import id.my.hendisantika.paymentms.dto.PaymentEvent;
@@ -12,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Controller;
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * Created by IntelliJ IDEA.
@@ -35,7 +34,7 @@ public class PaymentController {
     private final KafkaTemplate<String, OrderEvent> kafkaOrderTemplate;
 
     @KafkaListener(topics = "new-orders", groupId = "orders-group")
-    public void processPayment(String event) throws JsonProcessingException {
+    public void processPayment(String event) {
         log.info("Received event for payment {}", event);
         OrderEvent orderEvent = new ObjectMapper().readValue(event, OrderEvent.class);
 

@@ -1,7 +1,5 @@
 package id.my.hendisantika.stockms.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import id.my.hendisantika.stockms.dto.CustomerOrder;
 import id.my.hendisantika.stockms.dto.DeliveryEvent;
 import id.my.hendisantika.stockms.dto.PaymentEvent;
@@ -16,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * Created by IntelliJ IDEA.
@@ -40,7 +39,7 @@ public class StockController {
     private final KafkaTemplate<String, PaymentEvent> kafkaPaymentTemplate;
 
     @KafkaListener(topics = "new-payments", groupId = "payments-group")
-    public void updateStock(String paymentEvent) throws JsonProcessingException {
+    public void updateStock(String paymentEvent) {
         log.info("Inside update inventory for order {}", paymentEvent);
 
         DeliveryEvent event = new DeliveryEvent();
