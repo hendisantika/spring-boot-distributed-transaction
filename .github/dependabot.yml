@@ -26,7 +26,6 @@ updates:
     commit-message:
       prefix: "chore(deps)"
       prefix-development: "chore(deps-dev)"
-      include: scope
     rebase-strategy: auto
     groups:
       # Spring Boot parent & Spring ecosystem (minor/patch)
@@ -71,7 +70,6 @@ updates:
       - hendisantika
     commit-message:
       prefix: "ci(deps)"
-      include: scope
     groups:
       github-actions:
         patterns:
